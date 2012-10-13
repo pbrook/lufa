@@ -37,6 +37,8 @@
 
 #if defined(ENABLE_ISP_PROTOCOL) || defined(__DOXYGEN__)
 
+bool ISPActive;
+
 /** Handler for the CMD_ENTER_PROGMODE_ISP command, which attempts to enter programming mode on
  *  the attached device, returning success or failure back to the host.
  */
@@ -101,6 +103,8 @@ void ISPProtocol_EnterISPMode(void)
 	Endpoint_Write_8(CMD_ENTER_PROGMODE_ISP);
 	Endpoint_Write_8(ResponseStatus);
 	Endpoint_ClearIN();
+
+	ISPActive = true;
 }
 
 /** Handler for the CMD_LEAVE_ISP command, which releases the target from programming mode. */
@@ -127,6 +131,8 @@ void ISPProtocol_LeaveISPMode(void)
 	Endpoint_Write_8(CMD_LEAVE_PROGMODE_ISP);
 	Endpoint_Write_8(STATUS_CMD_OK);
 	Endpoint_ClearIN();
+
+	ISPActive = false;
 }
 
 /** Handler for the CMD_PROGRAM_FLASH_ISP and CMD_PROGRAM_EEPROM_ISP commands, writing out bytes,

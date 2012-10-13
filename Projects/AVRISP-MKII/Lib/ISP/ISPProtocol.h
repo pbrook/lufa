@@ -67,6 +67,8 @@
 		#define PROG_MODE_PAGED_READYBUSY_MASK  (1 << 6)
 		#define PROG_MODE_COMMIT_PAGE_MASK      (1 << 7)
 
+		extern bool ISPActive;
+
 	/* Function Prototypes: */
 		void ISPProtocol_EnterISPMode(void);
 		void ISPProtocol_LeaveISPMode(void);

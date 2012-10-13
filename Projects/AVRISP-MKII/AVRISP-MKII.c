@@ -36,6 +36,21 @@
 
 #include "AVRISP-MKII.h"
 
+static uint8_t current_leds;
+
+static void
+restore_leds(void)
+{
+  LEDs_SetAllLEDs(current_leds);
+}
+
+static void
+set_leds(uint8_t mask)
+{
+  current_leds = mask;
+  restore_leds();
+}
+
 /** Main program entry point. This routine contains the overall program flow, including initial
  *  setup of all components and the main program loop.
  */
@@ -44,7 +59,7 @@ int main(void)
 	SetupHardware();
 	V2Protocol_Init();
 
-	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
+	set_leds(LEDMASK_USB_NOTREADY);
 	GlobalInterruptEnable();
 
 	for (;;)
@@ -57,6 +72,8 @@ int main(void)
 
 		AVRISP_Task();
 		USB_USBTask();
+		if (program_minimus())
+		  restore_leds();
 	}
 }
 
@@ -83,13 +100,13 @@ void SetupHardware(void)
 /** Event handler for the library USB Connection event. */
 void EVENT_USB_Device_Connect(void)
 {
-	LEDs_SetAllLEDs(LEDMASK_USB_ENUMERATING);
+	set_leds(LEDMASK_USB_ENUMERATING);
 }
 
 /** Event handler for the library USB Disconnection event. */
 void EVENT_USB_Device_Disconnect(void)
 {
-	LEDs_SetAllLEDs(LEDMASK_USB_NOTREADY);
+	set_leds(LEDMASK_USB_NOTREADY);
 }
 
 /** Event handler for the library USB Configuration Changed event. */
@@ -105,7 +122,7 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 	  ConfigSuccess &= Endpoint_ConfigureEndpoint(AVRISP_DATA_IN_EPADDR, EP_TYPE_BULK, AVRISP_DATA_EPSIZE, 1);
 
 	/* Indicate endpoint configuration success or failure */
-	LEDs_SetAllLEDs(ConfigSuccess ? LEDMASK_USB_READY : LEDMASK_USB_ERROR);
+	set_leds(ConfigSuccess ? LEDMASK_USB_READY : LEDMASK_USB_ERROR);
 }
 
 /** Processes incoming V2 Protocol commands from the host, returning a response when required. */
@@ -122,12 +139,12 @@ void AVRISP_Task(void)
 	/* Check to see if a V2 Protocol command has been received */
 	if (Endpoint_IsOUTReceived())
 	{
-		LEDs_SetAllLEDs(LEDMASK_BUSY);
+		set_leds(LEDMASK_BUSY);
 
 		/* Pass off processing of the V2 Protocol command to the V2 Protocol handler */
 		V2Protocol_ProcessCommand();
 
-		LEDs_SetAllLEDs(LEDMASK_USB_READY);
+		set_leds(LEDMASK_USB_READY);
 	}
 }
 
