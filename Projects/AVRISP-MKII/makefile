@@ -26,7 +26,7 @@ CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
 
 AVRDUDE_PROGRAMMER = avr109
-AVRDUDE_PORT = /dev/ttyACM1
+AVRDUDE_PORT = /dev/ttyACM0
 AVRDUDE_FLAGS = 
 
 # Default target

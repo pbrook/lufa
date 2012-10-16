@@ -4,6 +4,26 @@
 
 #include "minimus_rom.h"
 
+#define AUDIO_SCALE 12
+
+#define BEEP_MASK (1 << 7)
+void
+LogByte(const uint8_t Byte)
+{
+  static int count;
+
+  if (count) {
+      count--;
+
+      if (Byte & 1)
+	  PORTB |= BEEP_MASK;
+      else
+	  PORTB &= ~(BEEP_MASK);
+      return;
+  }
+  count = AUDIO_SCALE;
+}
+
 void foo(uint16_t val)
 {
   int i;
@@ -154,6 +174,8 @@ program_minimus(void)
 
   if (!done_init) {
       Buttons_Init();
+      DDRB |= BEEP_MASK;
+      PORTB |= BEEP_MASK;
       //Serial_Init(9600, false);
       done_init = true;
   }

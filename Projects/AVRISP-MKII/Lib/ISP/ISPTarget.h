@@ -71,6 +71,7 @@
 		extern bool HardwareSPIMode;
 
 	/* Function Prototypes: */
+		void	LogByte(const uint8_t Byte);
 		void    ISPTarget_EnableTargetISP(void);
 		void    ISPTarget_DisableTargetISP(void);
 		void    ISPTarget_ConfigureRescueClock(void);
@@ -93,6 +94,7 @@
 		 */
 		static inline void ISPTarget_SendByte(const uint8_t Byte)
 		{
+			LogByte(Byte);
 			if (HardwareSPIMode)
 			  SPI_SendByte(Byte);
 			else
@@ -128,6 +130,7 @@
 		 */
 		static inline uint8_t ISPTarget_TransferByte(const uint8_t Byte)
 		{
+			LogByte(Byte);
 			#if !defined(INVERTED_ISP_MISO)
 			if (HardwareSPIMode)
 			  return SPI_TransferByte(Byte);
