@@ -19,7 +19,7 @@ for s in fin:
   if first_addr == -1:
     first_addr = addr;
   elif first_addr + rom_len != addr:
-    raise Exception("Bad address 0x%x (expected 0x%x) at line %d" % (addr, next_addr, line))
+    raise Exception("Bad address 0x%x (expected 0x%x) at line %d" % (addr, first_addr + rom_len, line))
   for i in range(0, n):
     b = int(s[9 + i * 2: 11 + i * 2], 16)
     fout.write(u"0x%02x," % b)
