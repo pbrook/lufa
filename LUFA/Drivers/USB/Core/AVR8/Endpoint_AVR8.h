@@ -552,6 +552,7 @@
 			static inline void Endpoint_Write_8(const uint8_t Data)
 			{
 				UEDATX = Data;
+				asm volatile("":::"memory"); // workaround bug in gcc 4.7.0
 			}
 
 			/** Discards one byte from the currently selected endpoint's bank, for OUT direction endpoints.
@@ -623,7 +624,9 @@
 			static inline void Endpoint_Write_16_LE(const uint16_t Data)
 			{
 				UEDATX = (Data & 0xFF);
+				asm volatile("":::"memory"); // workaround bug in gcc 4.7.0
 				UEDATX = (Data >> 8);
+				asm volatile("":::"memory"); // workaround bug in gcc 4.7.0
 			}
 
 			/** Writes two bytes to the currently selected endpoint's bank in big endian format, for IN
