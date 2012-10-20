@@ -207,7 +207,7 @@ program_minimus(void)
   if (mm_StartISP())
     goto fail;
   mm_SetLockBits(0x3f);
-  mm_SetFuse(FUSE_EXT, 0xcb);
+  mm_SetFuse(FUSE_EXT, 0xf4);
   mm_SetFuse(FUSE_HIGH, 0xd8);
   mm_SetFuse(FUSE_LOW, 0xff);
   mm_StartISP();
